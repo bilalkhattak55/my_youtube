@@ -1,0 +1,518 @@
+1------we are going to use rapid api;
+
+
+2------install 'rapidapi client' extension;
+
+
+3--------goto repo and copy paste dependencies;
+ Link =   https://github.com/adrianhajdin/project_youtube_clone
+
+
+
+4---------install pasted dependencies by a command;
+ npm install --legacy-peer-deps
+
+
+ 5----------App.js;
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
+import Navbar from "./compnents/Navbar";
+
+const App = () => {
+    <BrowserRouter>
+        <Box sx={{ backgroundColor: '#000'}}>
+           < Navbar />
+
+            <Routes>
+                <Route path="/" exact element={<Feed />} />
+                <Route path="/video/:id" element={<VideoDetail /> } />
+                <Route path="/channel/:id" element={ <ChannelDetail /> } />
+                <Route path="/search/:searchTerm" element={ <SearchFeed /> } />
+            </Routes>
+        </Box>
+
+    </BrowserRouter>
+
+}
+export default App;
+
+
+
+
+6---------make a components folder and make five files or components;
+a) ChannelDetails.jsx  b)Feed.jsx   c)Navbar.jsx  d)SearchFeed.jsx  e)VideoDetail.jsx  
+
+
+7---------import the above compnents in App.jsx;
+shortCut for import is =  "double click on component" then CNTRL + space;
+
+
+
+8---------import all components in one line;
+make a index.js;
+
+export { default as Navbar} from './Navbar'
+export { default as Feed} from './Feed'
+export { default as ChannelDetail} from './ChannelDetail'
+export { default as SearchFeed} from './SearchFeed'
+export { default as VideoDetail} from './VideoDetail'
+
+
+9--------import the above compnents from index.js to App.js;
+import { Navbar, Feed, SearchFeed, VideoDetail, ChannelDetail} from './compnents';
+
+
+
+10---------goto Navbar.jsx and import;
+import { Stack } from '@mui/material';
+import {Link} from 'react-router-dom';
+
+
+
+11--------make a utils folder in src;
+12--------make contants.js file in utils;
+13--------copy paste all the source code fro JavaScript master repo;
+Link = https://github.com/adrianhajdin/project_youtube_clone/blob/main/src/utils/constants.js
+
+
+
+14---------goto navbar.jsx;
+import { Stack } from '@mui/material';
+import {Link} from 'react-router-dom';
+
+import { logo } from '../utils/constants'
+
+const Navbar = () => {
+  return (
+    <Stack
+     direction='row'
+     alignItems='center'
+     p={2}
+     sx={{position: 'sticky', background: '#000', top: 0, justifyContent:'space-between' }}
+     >
+     <Link to='/' style={{display:'flex', alignItems: 'center'}}>
+      <img src={logo} alt='logo' height={45} />
+
+     </Link>
+     <SearchBar />
+    </Stack>
+  )
+}
+export default Navbar;
+
+
+15-------------create SearchBar.jsx into components;
+16-------------export it from index.js;
+17-------------import SearchBar in Navbar.jsx;
+
+
+
+
+
+18-------------goto SearchBar and make it;
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Paper, IconButton } from '@mui/material';
+import { Search } from '@mui/icons-material';
+
+const SearchBar = () => {
+  return (
+    <Paper
+    component='form'
+    onSubmit={()=> {}}
+    sx={{borderRadius: 20,
+         border: '1px solid #e3e3e3',
+         pl:2,
+         boxShadow: 'none',
+         mr: {sm: 5}
+    }}
+    >
+      <input
+      className="search-bar"
+      placeholder="search..."
+      value=""
+      onChange={()=> {}}
+      type="text"
+       />
+       <IconButton type='submit' sx={{p:'10px', color: 'red'}}>
+        <Search />
+       </IconButton>
+    </Paper>
+  )
+}
+
+export default SearchBar;
+
+
+
+
+19-------------Feed.jsx is also important component lets make it;
+import {useState, useEffect} from 'react';
+import { Box, Stack, Typography } from "@mui/material"
+
+const Feed = () => {
+  return (
+    <Stack sx={{flexDirection: {sx: 'column', md:'row'}}}>
+      <Box sx={{height: {sx:'auto', md:'92vh'}, borderRight: '1px solid #3d3d3d', px: {sx: 0, md:2}}}>
+         sideBar
+         <Typography className='copyright' variant='body2' sx={{mt:1.5, color:'#fff'}}>
+          copyright &copy; 2023 Muhammad Bilal
+         </Typography>
+      </Box>
+    </Stack>
+  )
+}
+export default Feed;
+
+
+
+20------------now create SideBar.jsx;
+export from index.js;
+import in Feed.jsx;
+
+
+
+21------------make sidebar.jsx;
+import { Stack } from '@mui/material'
+
+import { categories } from '../utils/constants';
+
+const selectedCategory = 'New';
+
+const Sidebar = () => {
+    return (
+        <Stack
+            direction='row'
+            sx={{
+                overflowY: 'auto',
+                height: { sx: 'auto', md: '95%' },
+                flexDirection: { md: 'column' },
+            }}
+        >
+
+            {
+                categories.map((category) => (
+                    <button
+                        className='category-btn'
+                        style={{
+                            background: category.name === selectedCategory && '#FC1503',
+                            color: 'white'
+                        }}
+                        key={category.id}
+                    >
+                        <span style={{
+                            color: category.name === selectedCategory ? 'white' : 'red', marginRight: '15px'
+                        }}>
+                            {category.icon}
+                        </span>
+
+                        <span 
+                        style={{
+                            opacity: category.name === selectedCategory ? '1' : '0.8'
+                        }}
+                        >{category.name}</span>
+                    </button>
+                ))
+            }
+
+        </Stack>
+    )
+}
+
+export default Sidebar;
+
+
+
+
+22--------------goto Feed.jsx again and create add some more elements;
+<Box  p={2} sx={{overflowY: 'auto', height: '90vh', flex:2}}>
+        <Typography variant='h4' fontWeight='bold' mb={2} sx={{color: 'white'}}>
+          New <span style={{color: '#F31503'}}> Videos</span>
+        </Typography>
+
+        <Videos />
+
+</Box>
+
+
+
+23--------------Make Videos.jsx component;and rfce init;
+24--------------make fetchFromApi.js component;
+import axios from 'axios';
+
+const BASE_URL =  'https://youtube-v31.p.rapidapi.com';
+const options = {
+    method: 'GET',
+    url: BASE_URL,
+    params: {
+    //   relatedToVideoId: '7ghhRHRP6t4',
+    //   part: 'id,snippet',
+    //   type: 'video',
+      maxResults: '50'
+    },
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+      'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com'
+    } 
+  };
+
+  export const fethFromApi = async (url)=> {
+    const {data} = await axios.get(`${BASE_URL}/${url}`, options);
+    return data;
+  }
+
+
+
+25-------goto Feed.jsx and import;
+import { fethFromApi } from '../utils/fetchFromApi';
+
+26--------create useEffect function;
+ useEffect(()=> {
+      fethFromApi(`search?part=snippet&q=${selectedCategory}`);  //selectedCategory is coming from useState;
+  },[selectedCategory]);
+
+
+27---------now save save each category name in use state;
+make useState in Feed.jsx;
+const [selectedCategory, setSelectedCategory] = useState('New');
+
+
+28---------insert state as a props to <Sidebar />;
+<Sidebar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+
+29---------receive props and destructure them;
+const Sidebar = ({selectedCategory, setSelectedCategory}) => {
+
+
+30---------comment New;
+// const selectedCategory = 'New';
+
+31----------setSelectedCategory with the help of onClick function;
+onClick={()=> setSelectedCategory(category.name)}
+
+
+32----------change new to {selectedCategory};
+ {selectedCategory} <span style={{ color: '#F31503' }}> Videos</span>
+
+
+33--------save videos in state;
+ const [videos, setVideos] = useState('');
+ .then((data) => setVideos(data.items) )
+
+
+33---------give videos as props to videos component;
+ <Videos videos={videos} />
+
+
+34------------destructure videos in Videos component;
+ const Videos = ({videos}) => {
+
+
+35-----------then console.log(videos) to check the data is correctly getting from api or not?
+
+
+36-----------import {Stack, Box} from "@mui/material";
+import {VideoCard, ChannelCard} from "./";
+
+const Videos = ({videos}) => {
+  console.log(videos)
+  return (
+   
+    <Stack direction='row' flexWrap='wrap' justifyContent='start' gap={2}>
+      {
+        videos.map((item, idx)=> (
+          <Box key={idx}>
+            {item.id.videoId && <VideoCard video={item} />}
+            {item.id.channelId && <ChannelCard channelDetail={item} />}
+          </Box>
+        ))
+      }
+    </Stack>
+  )
+}
+
+export default Videos;
+
+
+
+
+37----------make VideoCard.jsx and ChannelCard.jsx components;
+export default them from index.js;
+import them in Videos.jsx;
+
+
+
+38----------in VidoeCard.jsx;
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Typography, Card, CardContent, CardMedia } from '@mui/material';
+import { CheckCircle } from '@mui/icons-material';
+import { demoThumbnailUrl, demoVideoUrl, demoVideoTitle, demoChannelTitle, demoChannelUrl } from '../utils/constants';
+
+
+const VideoCard = ({video: {id: {videoId}, snippet}}) => {
+  // console.log("viddddd",videoId, snippet)
+  console.log("snippet.thumbnails.high.url",snippet?.thumbnails?.high?.url)
+  return (
+    <Card sx={{width:{md: '320px', xs: '100%'}, boxShadow:'none', borderRadius: 0 }}>
+      <Link to={videoId ? `/video/${videoId}` : demoVideoUrl}>
+         <CardMedia
+         image={snippet?.thumbnails?.high?.url}
+         alt={snippet?.title}
+         sx={{width:358, height:180}}
+          />
+      </Link>
+
+      <CardContent sx={{backgroundColor: '#1e1e1e', height: '106px'}}>
+
+      <Link to={videoId ? `/video/${videoId}` : demoVideoUrl}>
+        <Typography variant='subtitle1' fontWeight='bold' color='#fff'>
+           {snippet?.title.slice(0, 60) || demoVideoTitle.slice(0, 60)}
+        </Typography>
+      </Link>
+
+      <Link to={snippet?.channelId ? `/channel/${snippet?.channelId}` :  demoVideoUrl }>
+        <Typography variant='subtitle2' fontWeight='bold' color='gray'>
+           {snippet?.channelTitle || demoChannelTitle}
+           <CheckCircle sx={{fontSize: 12, color: 'gray', ml: '5px'}} />
+        </Typography>
+      </Link>
+
+      </CardContent>
+      
+    </Card>
+  )
+}
+
+export default VideoCard;
+
+
+39----------in channelCard.jsx;
+import React from 'react';
+import {Box, CardContent, CardMedia, Typography} from '@mui/material';
+import { CheckCircle } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
+
+import { demoProfilePicture } from '../utils/constants';
+// import ChannelDetail from './ChannelDetail';
+
+
+
+const ChannelCard = ({channelDetail}) => {
+  // console.log("CD",channelDetail)
+  return (
+    <Box
+    sx={{boxShadow:'none', borderRadius:'20px', display:'flex', justifyContent:'center', alignItems:'center', width:{xs: '356px', md: '320px'}, height:'326px', margin:'auto'}}
+    >
+     <Link to={`/channel/${channelDetail?.id?.channelId}`}>
+     <CardContent sx={{display:'flex', flexDirection:'column', justifyContent: 'center', textAlign:'center', color:'#fff'}}>
+
+      <CardMedia image={channelDetail?.snippet?.thumbnails?.high?.url || demoProfilePicture}
+      alt={channelDetail?.snippet?.title}
+      sx={{borderRadius:'50%', height:'180px', width:'180px', mb:2, border:'1px solid #e3e3e3'}}
+      />
+
+      <Typography variant='h6'>
+        {channelDetail?.snippet?.title}
+        <CheckCircle sx={{fontSize:14, color:'gray', ml: '5px'}} /> 
+      </Typography>
+
+      {channelDetail?.statistics?.subscriberCount && (
+        <Typography>
+          {parseInt(channelDetail?.statistics?.subscriberCount).toLocaleString()} Subscribers
+        </Typography>
+      )}
+
+
+
+     </CardContent>
+     </Link>
+    </Box>
+  )
+}
+
+export default ChannelCard;
+
+
+
+40----------Now check the api in rapid api;
+41----------we can also copy the fetching method from rapidApi extension;
+42----------now using cssgradient.io;  for gradient colors;
+43----------add marginTop in channeldetail to make the component reusable;
+ <ChannelCard channelDetail={channelDetail} marginTop='-110px' />;
+ const ChannelCard = ({channelDetail, marginTop}) => {
+  // console.log("CD",channelDetail)
+  return (
+    <Box
+    sx={{ boxShadow:'none', borderRadius:'20px', display:'flex', justifyContent:'center', alignItems:'center', width:{xs: '356px', md: '320px'}, height:'326px', margin:'auto', marginTop }}
+
+
+
+
+44----------use Videos.jsx as reuseable component;
+ <Box display='flex' p="2">
+        <Box sx={{ mr: { sm: '100px' } }} />
+        <Videos videos={videos} />
+      </Box>
+
+
+
+45---------Now we will create search functionalty;
+46---------copy the entire code of Feed.jsx and paste in SearchFeed.jsx;
+import { useState, useEffect } from 'react';
+import { Box, Typography } from "@mui/material";
+import { Videos } from './';
+
+import {useParams} from 'react-router-dom';
+
+import { fethFromApi } from '../utils/fetchFromApi';
+
+const SearchFeed = () => {
+  const [videos, setVideos] = useState([]);
+  const [searchTerm] = useParams();
+  //  console.log(videos)
+
+
+
+  useEffect(() => {
+    fethFromApi(`search?part=snippet&q=${searchTerm}`)
+      .then((data) => setVideos(data.items))
+  }, [searchTerm]);
+
+  return (
+
+    <Box p={2} sx={{ overflowY: 'auto', height: '90vh', flex: 2 }}>
+      <Typography variant='h4' fontWeight='bold' mb={2} sx={{ color: 'white' }}>
+        Search Result For : <span style={{ color: '#F31503' }}> {searchTerm}</span> Videos
+      </Typography>
+
+      <Videos videos={videos} />
+    </Box>
+  )
+}
+export default SearchFeed;
+
+
+
+47-----------now we are goin to make the input work so goto SearchBar.jsx;
+48-----------search functionalty;
+ const [searchTerm, setSearchTerm] = useState('');
+
+  const navigate = useNavigate()
+
+  const handleSubmit =(e)=> {
+    e.preventDefault();
+
+    if(searchTerm) {
+       navigate(`/search/${searchTerm}`)
+       setSearchTerm('');
+    }
+   
+onSubmit={handleSubmit}
+onChange={(e)=> setSearchTerm(e.target.value)}
+value={searchTerm}
+
+49-------when we search the state will navigate to the app.js and from there SearchFeed.jsx;
+
+
+50---------now we will create the paly video functionalty;
