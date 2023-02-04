@@ -10,6 +10,7 @@ const SearchFeed = () => {
   const [videos, setVideos] = useState([]);
   const {searchTerm} = useParams();
   //  console.log(videos)
+  if(!videos?.length) return "Loading...";
 
 
   useEffect(() => {
