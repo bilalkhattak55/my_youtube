@@ -7,16 +7,19 @@ import {useParams} from 'react-router-dom';
 import { fethFromApi } from '../utils/fetchFromApi';
 
 const SearchFeed = () => {
+  useEffect(() => {
+    fethFromApi(`search?part=snippet&q=${searchTerm}`)
+      .then((data) => setVideos(data.items))
+  }, [searchTerm]);
+
+  
   const [videos, setVideos] = useState([]);
   const {searchTerm} = useParams();
   //  console.log(videos)
   if(!videos?.length) return "Loading...";
 
 
-  useEffect(() => {
-    fethFromApi(`search?part=snippet&q=${searchTerm}`)
-      .then((data) => setVideos(data.items))
-  }, [searchTerm]);
+  
 
   return (
 
